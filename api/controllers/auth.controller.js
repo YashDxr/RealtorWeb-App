@@ -30,7 +30,7 @@ export const signin = async (req,res,next) =>{
     const validPassword = await bcryptjs.compare(password,validUser.password);
     if(!validPassword) return next(customErrors(401,"Invalid Credentials"));
     const token = jwt.sign({id: validUser._id}, process.env.JWT_SECRET_KEY);
-    const { password: pass, ...REST} = validUser._doc;                                     // delete password from response before sending response to user for security purpose
+    const { password: pass, ...REST} = validUser._doc;
     res.cookie('access_token', token, { httpOnly: true }).status(200).json(REST);          //expires: 24*60*60
 
   }catch(err){
