@@ -25,7 +25,7 @@ export const signup = async (req, res, next) => {
 export const signin = async (req,res,next) =>{
   const {email,password} = req.body;
   try{
-    const validUser = await User.findOne({email});
+    const validUser = await User.findOne({email}) || await User.findOne({username: email});
     if(!validUser) return next(customErrors(404,"User Not Found"));
     const validPassword = await bcryptjs.compare(password,validUser.password);
     if(!validPassword) return next(customErrors(401,"Invalid Credentials"));
@@ -37,3 +37,28 @@ export const signin = async (req,res,next) =>{
     next(err);
   }
 };
+
+
+export const google = async(req, res, next) => {
+  const user = await User.findOne({email: req.body.email});
+  if(user){
+    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET_KEY);
+    const {password: pass, ...rest } = user._doc;
+    res.cookie('access_token', token, {httpOnly: true}).status(200).json(rest);
+  }
+  else{
+    const generateUsername = req.body.name.split(" ").join("").toLowerCase() + Math.random().toString(10).slice(-4);
+    // random username to store in data base because sign-in with google does not provide username input ----->> remove space between name and add 4 random digits at the end
+    const generatePassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);   
+    // random password to store in data base because sign-in with google does not provide password input ----->> 8 digit password + 8 digit password
+    const hashedPassword = await bcryptjs.hash(generatePassword, 10);
+    const newUser = new User({username: generateUsername , email: req.body.email , password: hashedPassword, avatar: req.body.photo});
+
+
+    await newUser.save();
+    const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET_KEY);
+    const {password: pass, ...rest } = newUser._doc;
+    res.cookie('access_token', token, {httpOnly: true}).status(200).json(rest);
+    
+  }
+}
