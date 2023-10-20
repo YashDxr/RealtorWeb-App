@@ -30,11 +30,15 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
 
-  console.log(formData);
+  // console.log(formData);
 
-  const handleChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  useEffect(() => {
+    if (file) {
+      handleFileUpload(file);
+    }
+  }, [file]);
+
+
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
@@ -58,11 +62,7 @@ export default function Profile() {
       }
     );
   };
-  useEffect(() => {
-    if (file) {
-      handleFileUpload(file);
-    }
-  }, [file]);
+  
 
   const handleUpdateChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -128,7 +128,7 @@ export default function Profile() {
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
-          onChange={handleChange}
+          onChange={(e) => setFile(e.target.files[0])}
           type="file"
           ref={fileRef}
           className=" self-center"

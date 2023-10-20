@@ -13,7 +13,7 @@ export const updateUser = async (req, res, next) => {
     return next(customErrors(401, "Unauthorized Access"));
   try {
     if (req.body.password) {
-      req.body.password = bcryptjs.hash(req.body.password, 10);
+      req.body.password = await bcryptjs.hash(req.body.password, 10);
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -41,11 +41,12 @@ export const updateUser = async (req, res, next) => {
 };
 
 export const deleteUser = async (req, res, next) => {
-  if(req.user.id != req.params.id) return next(errorHandler(400, 'Unauthorized Request'));
+  if (req.user.id != req.params.id)
+    return next(errorHandler(400, "Unauthorized Request"));
   try {
     await User.findByIdAndDelete(req.params.id);
-    res.clearCookie('access_token');
-    res.status(200).json("User has been deleted")
+    res.clearCookie("access_token");
+    res.status(200).json("User has been deleted");
   } catch (error) {
     next(error);
   }
