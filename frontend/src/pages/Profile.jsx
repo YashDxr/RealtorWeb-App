@@ -19,6 +19,7 @@ import {
   signOutUserSuccess,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -37,7 +38,6 @@ export default function Profile() {
       handleFileUpload(file);
     }
   }, [file]);
-
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
@@ -62,7 +62,6 @@ export default function Profile() {
       }
     );
   };
-  
 
   const handleUpdateChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -180,6 +179,12 @@ export default function Profile() {
         >
           {loading ? "Loading..." : "Update"}
         </button>
+        <Link
+          to={"/create-listing"}
+          className="bg-green-700 text-white text-center rounded-lg p-3 hover:opacity-90"
+        >
+          Create Listing
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span
