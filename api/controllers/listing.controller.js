@@ -17,12 +17,32 @@ export const deleteListing = async (req, res, next) => {
     return next(customErrors(401, "Listing not found"));
   }
   if (req.user.id !== listing.userRef) {
-    return next(customErrors(401, "Unauthorized Access"));
+    return next(customErrors(401, "Unauthorized Request"));
   }
   try {
     await Listing.findByIdAndDelete(req.params.id);
     res.status(200).json("Listing deleted successfully");
   } catch (error) {
     next(error);
+  }
+};
+
+export const updateListing = async (req, res, next) => {
+  const listing = await Listing.findById(req.params.id);
+  if (!listing) {
+    return next(customErrors(401, "Listing not found"));
+  }
+  if (req.user.id !== listing.userRef) {
+    return next(customErrors(401, "Unauthorized Request"));
+  }
+  try {
+    const updateListing = await Listing.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.status(200).json(updateListing);
+  } catch (error) {
+    next(Error);
   }
 };
