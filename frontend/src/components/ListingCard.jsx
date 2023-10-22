@@ -24,12 +24,44 @@ export default function ListingCard(props) {
           <p className="text-sm  text-gray-600 line-clamp-2">
             {props.listing.description}
           </p>
-          <p className="text-slate-500 mt-2 font-semibold">
-            &#8377;&nbsp;
-            {props.listing.offer
-              ? props.listing.offerPrice.toLocaleString("hi")
-              : props.listing.price.toLocaleString("hi")}
-            {props.listing.type === "rent" && " / month"}
+          <p className="text-slate-500 mt-2 font-semibold flex text-center">
+            {props.listing.offer ? (
+              <div className="flex gap-9">
+                {props.listing.type === "rent" ? (
+                  <div className="flex flex-wrap">
+                    Discount Price:
+                    <div>
+                      &#8377;&nbsp;
+                      {props.listing.offerPrice.toLocaleString("hi")} /month
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap">
+                    Discount Price:
+                    <div>
+                      &#8377;&nbsp;
+                      {props.listing.offerPrice.toLocaleString("hi")}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-wrap">
+                  Actual Price:&nbsp;
+                  <div className="line-through">
+                    (&#8377;&nbsp;{props.listing.price.toLocaleString("hi")})
+                  </div>
+                </div>
+              </div>
+            ) : (
+              //   <div className=" flex gap-0">
+              <div className="">
+                {props.listing.type === "rent"
+                  ? `${props.listing.price.toLocaleString("hi")}/month`
+                  : `${props.listing.price.toLocaleString("hi")}`}
+              </div>
+              //   </div>
+            )}
+            {/* {props.listing.type === "rent" && " / month"} */}
           </p>
           <div className="text-slate-700 flex gap-4">
             <div className="font-bold text-xs">
