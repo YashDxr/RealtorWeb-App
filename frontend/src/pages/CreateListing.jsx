@@ -264,7 +264,7 @@ export default function CreateListing() {
                 type="number"
                 id="price"
                 min="1000"
-                max="100000000"
+                max="100000000000000"
                 required
                 className="p-3 border border-gray-400 rounded-lg"
                 onChange={handleChange}
@@ -281,7 +281,7 @@ export default function CreateListing() {
                   type="number"
                   id="offerPrice"
                   min="0"
-                  max="1000000"
+                  max="100000000000000"
                   required
                   className="p-3 border border-gray-400 rounded-lg"
                   onChange={handleChange}
